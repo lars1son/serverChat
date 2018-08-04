@@ -1,44 +1,41 @@
-package api;
-
-import model.Message;
+package com.serverChat.serverChat.api;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.LinkedHashMap;
 
-@ServerEndpoint(value = "/chat/{username}")
+@ServerEndpoint(value = "/chat/{room}")
 public class ChatEndpoint {
 
     private Session session;
-    private static Set<ChatEndpoint> chatEndpoints
-            = new CopyOnWriteArraySet<>();
+    private static HashMap<String, ChatEndpoint> chatEndpoints
+            = new LinkedHashMap<>();
     private static HashMap<String, String> users = new HashMap<>();
 
     @OnOpen
     public void onOpen(
             Session session,
-            @PathParam("username") String username) throws IOException {
+            @PathParam("room") String room) throws IOException {
+
 
         this.session = session;
-        chatEndpoints.add(this);
-        users.put(session.getId(), username);
+//        chatEndpoints.add(this);
+//        users.put(session.getId(), username);
 
         Message message = new Message();
-        message.setFrom(username);
+//        message.setFrom(username);
         message.setContent("Connected!");
-        broadcast(message);
+//        broadcast(message);
     }
 
     @OnMessage
-    public void onMessage(Session session, Message message)
+    public void onMessage(Session session)
             throws IOException {
 
-        message.setFrom(users.get(session.getId()));
-        broadcast(message);
+
     }
 
     @OnClose
@@ -59,15 +56,15 @@ public class ChatEndpoint {
     private static void broadcast(Message message)
             throws IOException, EncodeException {
 
-        chatEndpoints.forEach(endpoint -> {
-            synchronized (endpoint) {
-                try {
-                    endpoint.session.getBasicRemote().
-                            sendObject(message);
-                } catch (IOException | EncodeException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        chatEndpoints.forEach(endpoint -> {
+//            synchronized (endpoint) {
+//                try {
+//                    endpoint.session.getBasicRemote().
+//                            sendObject(message);
+//                } catch (IOException | EncodeException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
     }
 }

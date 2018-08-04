@@ -1,7 +1,7 @@
-package operators;
+package com.serverChat.serverChat.api.operators;
 
 import com.google.gson.Gson;
-import model.Message;
+import com.serverChat.serverChat.api.Message;
 
 import javax.websocket.DecodeException;
 import javax.websocket.EndpointConfig;
